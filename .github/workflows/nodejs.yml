@@ -9,18 +9,39 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
-
+        node-version: [10.x, 12.x]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+
+    - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
+        node-version: '12.x'
+
+    - name: Cache npm modules
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+
+    # Install dependencies step 
+    - name: Install dependencies
+      run: npm ci
+
+    # Lint step 
+    - name: build
+      run: npm run lint
+
+    # Build step 
+    - name: build
+      run: npm run build
+
+    # Test step 
+    - name: test
+      run: npm test
       env:
-        CI: true
         NODE_ENV: test
