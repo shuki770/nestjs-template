@@ -33,7 +33,7 @@ jobs:
       run: npm ci
 
     # Lint step 
-    - name: build
+    - name: lint
       run: npm run lint
 
     # Build step 

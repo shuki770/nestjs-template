@@ -1,0 +1,1 @@
+export const ROLES_METADATA = 'ROLES_METADATA';
