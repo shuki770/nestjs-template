@@ -47,7 +47,7 @@ RUN  npm run test
 # ==================== Build stage ====================
 
 FROM dev-ready as build
-RUN  npm run build:prod
+RUN  npm run build
 
 #
 # ==================== Release stage ====================
