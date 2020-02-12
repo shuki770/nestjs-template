@@ -9,7 +9,10 @@ describe('UserController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [UserService],
-    }).compile();
+    })
+    .overrideProvider(UserService)
+    .useValue({})
+    .compile();
 
     userController = app.get<UserController>(UserController);
   });
