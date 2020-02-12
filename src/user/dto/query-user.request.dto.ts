@@ -31,6 +31,7 @@ export class QeuryUserRequestDto {
 
   @Expose()
   @Type(() => Number)
+  @Transform(Number)
   @IsOptional()
   @IsInt()
   @IsPositive()
@@ -39,6 +40,7 @@ export class QeuryUserRequestDto {
 
   @Expose()
   @Type(() => Number)
+  @Transform(Number)
   @IsOptional()
   @IsInt()
   @Min(0)
