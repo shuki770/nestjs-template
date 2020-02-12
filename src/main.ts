@@ -5,12 +5,13 @@ dotenv.config();
 import * as helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { AllExceptionFilter } from './core/filters/exception.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, INestApplication } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { LoggerInterceptor } from './core/interceptors/logger.interceptor';
 import { AuthGuard } from './core/guards/auth.guard';
 import { config } from './config';
 import { LoggerService } from './core/services/logger.service';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 const logger: LoggerService = LoggerService.createLogger('BootstrapApp');
 
@@ -22,6 +23,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe(config.validation));
   app.useGlobalFilters(new AllExceptionFilter());
 
+  setupSwagger(app);
+
   // Apply helmet middleware
   app.use(helmet());
 
@@ -30,3 +33,14 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+function setupSwagger(app: INestApplication) {
+  const options = new DocumentBuilder()
+    .setTitle('Users API')
+    .setDescription('Users API description')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
+}

@@ -12,34 +12,31 @@ export class LoggerInterceptor implements NestInterceptor {
     const startTime = Date.now();
     const contextType = context.getType();
 
-
     return next.handle().pipe(
       tap(
         () => {
           if (contextType === 'http') {
-            const reqTime = Date.now() - startTime;
-            this.logHttpRequest(context, reqTime)
+            this.logHttpRequest(context, startTime);
           }
         },
         (error: Error) => {
           if (contextType === 'http') {
-            const reqTime = Date.now() - startTime;
-            this.logHttpRequest(context, reqTime)
+            this.logHttpRequest(context, startTime);
           }
         },
       ),
     );
   }
 
-  private logHttpRequest(context: ExecutionContext, reqTime: number) {
+  private logHttpRequest(context: ExecutionContext, startTime: number) {
     if (context.getType() !== 'http') return;
+    const reqTime = Date.now() - startTime;
     const controllerName = context.getClass().name;
     const handlerName = context.getHandler().name;
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
     const { url, method } = request;
     const { statusCode } = response;
-
 
     this.logger.log(`${method.toUpperCase()} ${url} ${statusCode} [${controllerName}:${handlerName}] ${reqTime}ms`);
   }

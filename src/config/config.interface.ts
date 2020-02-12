@@ -1,5 +1,5 @@
 import { ValidationPipeOptions, CacheModuleOptions } from '@nestjs/common';
-
+import { ConnectionOptions } from 'mongoose';
 export type RecursivePartial<T> = T extends object ? { [K in keyof T]?: RecursivePartial<T[K]> } : T;
 export enum Environment {
   Development = 'development',
@@ -19,7 +19,11 @@ export interface Config {
   environment: Environment;
   isProd: boolean;
   auth?: any;
-  dataAccess?: any;
+  dataAccess: {
+    uri: string,
+    debug: boolean,
+    options: ConnectionOptions,
+  };
   cache?: CacheModuleOptions;
   validation: ValidationPipeOptions;
   services: {};
